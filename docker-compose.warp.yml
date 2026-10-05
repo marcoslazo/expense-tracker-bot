@@ -1,0 +1,29 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - WIREGUARD_CONFIGURATION_FILE=/gluetun/wireguard/wg0.conf
+    volumes:
+      - ./warp/wgcf-profile.conf:/gluetun/wireguard/wg0.conf:ro
+    ports:
+      - "8080:8080"
+
+  bot:
+    network_mode: "service:gluetun"
+    command: ["node", "dist/run-polling.js"]
+    depends_on:
+      - gluetun
+    ports: !reset []
+    # Ollama runs on the host (localhost:11434) and isn't reachable from here,
+    # because this container shares gluetun's network namespace — so force
+    # gemini for this run only, without touching .env. (Ollama is a local
+    # development option only; it's never used in the deployed build.)
+    environment:
+      - LLM_PROVIDER=gemini
+      - LOG_LEVEL=${LOG_LEVEL:-info}

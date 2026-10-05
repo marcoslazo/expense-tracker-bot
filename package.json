@@ -1,0 +1,24 @@
+{
+  "name": "telegram-expense-tracker",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Bot de Telegram que interpreta gastos por texto/voz y los registra en Google Sheets",
+  "scripts": {
+    "dev": "tsx watch src/run-polling.ts",
+    "build": "tsc",
+    "start": "node dist/run-webhook.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "dotenv": "^16.4.0",
+    "googleapis": "^140.0.0",
+    "grammy": "^1.30.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.16.0",
+    "typescript": "^5.5.0"
+  }
+}
